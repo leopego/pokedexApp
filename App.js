@@ -1,21 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import "react-native-gesture-handler";
+import React from "react";
+import { NavigationContainer, Text } from "@react-navigation/native";
+import { useFonts, BebasNeue_400Regular } from "@expo-google-fonts/bebas-neue";
 
-export default function App() {
+import HomeRoute from "./src/routes/homeRoute";
+
+export default App = () => {
+  let [fontsLoaded] = useFonts({
+    BebasNeue_400Regular,
+  });
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    fontsLoaded && (
+      <NavigationContainer>
+        <HomeRoute />
+      </NavigationContainer>
+    )
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+};
