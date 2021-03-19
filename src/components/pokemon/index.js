@@ -6,17 +6,23 @@ import {
   Image,
   Dimensions,
 } from "react-native";
+
+//REDUX --------------------------------------------------------------
+import { setPokemonDetails } from "../../slices/pokemonDetailsSlice";
+import { useDispatch } from "react-redux";
+
 import axios from "axios";
 
 const screenWidth = Dimensions.get("screen").width;
 
-const Pokemon = ({ name, url }) => {
-  const [pokemonDetails, setPokemonDetails] = useState(null);
+const Pokemon = ({ name, url, navigation }) => {
+  const [pokemonDetails, setPokemonDetailsLocal] = useState(null);
+  const dispatch = useDispatch();
 
   const handlePokemonDetails = () => {
     axios
       .get(url)
-      .then((response) => setPokemonDetails(response.data))
+      .then((response) => setPokemonDetailsLocal(response.data))
       .catch((e) => console.log("error leo"));
   };
 
@@ -25,7 +31,13 @@ const Pokemon = ({ name, url }) => {
   }, [url]);
 
   return pokemonDetails != null ? (
-    <TouchableOpacity style={styles.pokemonContainer}>
+    <TouchableOpacity
+      onPress={() => {
+        dispatch(setPokemonDetails({ pokemonUrl: url }));
+        navigation.navigate("detailsScreen");
+      }}
+      style={styles.pokemonContainer}
+    >
       <Text style={styles.pokemonName}>{name}</Text>
       <Image
         style={styles.pokemonImage}

@@ -9,16 +9,16 @@ import {
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 
-import { pokemonUrl } from "../../api";
+import { pokemonApi } from "../../api";
 import Pokemon from "../../components/pokemon";
 
 const screenWidth = Dimensions.get("screen").width;
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const [pokemonData, setPokemonData] = useState({});
 
   useEffect(() => {
-    pokemonUrl
+    pokemonApi
       .get("https://pokeapi.co/api/v2/pokemon?limit=20")
       .then((response) => setPokemonData(response.data.results))
       .catch((e) => console.log(e));
@@ -30,7 +30,7 @@ const HomeScreen = () => {
     return (
       <SafeAreaView style={styles.pokemonListContainer}>
         <View style={styles.pokemonListTitleContainer}>
-          <Text style={styles.pokemonListTitle}>Select the pokemon</Text>
+          <Text style={styles.pokemonListTitle}>Select a pokemon</Text>
           <Image
             style={styles.pokemonListTitleImage}
             source={{
@@ -40,7 +40,9 @@ const HomeScreen = () => {
         </View>
         <FlatList
           data={pokemonData}
-          renderItem={({ item }) => <Pokemon name={item.name} url={item.url} />}
+          renderItem={({ item }) => (
+            <Pokemon name={item.name} url={item.url} navigation={navigation} />
+          )}
           keyExtractor={(item) => item.name}
         />
       </SafeAreaView>

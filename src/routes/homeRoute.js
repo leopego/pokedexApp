@@ -3,6 +3,7 @@ import { Text } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import HomeScreen from "../screens/homeScreen";
+import detailsScreen from "../screens/detailsScreen";
 
 const Stack = createStackNavigator();
 
@@ -14,6 +15,7 @@ const HomeRoute = () => {
         component={HomeScreen}
         options={{ headerShown: false }}
       />
+      <Stack.Screen name="detailsScreen" component={detailsScreen} />
     </Stack.Navigator>
   );
 };
