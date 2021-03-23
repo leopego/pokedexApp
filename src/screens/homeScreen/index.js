@@ -20,7 +20,10 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     pokemonApi
       .get("https://pokeapi.co/api/v2/pokemon?limit=20")
-      .then((response) => setPokemonData(response.data.results))
+      .then((response) => {
+        setPokemonData(response.data.results);
+        console.log(response);
+      })
       .catch((e) => console.log(e));
   }, []);
 
@@ -44,6 +47,7 @@ const HomeScreen = ({ navigation }) => {
             <Pokemon name={item.name} url={item.url} navigation={navigation} />
           )}
           keyExtractor={(item) => item.name}
+          showsVerticalScrollIndicator={false}
         />
       </SafeAreaView>
     );
@@ -69,8 +73,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: screenWidth,
-    borderBottomWidth: 3,
-    borderBottomColor: "#fff",
     borderRadius: 10,
   },
   pokemonListTitleImage: {

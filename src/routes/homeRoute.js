@@ -15,7 +15,11 @@ const HomeRoute = () => {
         component={HomeScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="detailsScreen" component={detailsScreen} />
+      <Stack.Screen
+        name="detailsScreen"
+        component={detailsScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };

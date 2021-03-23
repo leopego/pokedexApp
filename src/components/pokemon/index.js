@@ -6,7 +6,6 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-
 //REDUX --------------------------------------------------------------
 import { setPokemonDetails } from "../../slices/pokemonDetailsSlice";
 import { useDispatch } from "react-redux";
@@ -17,26 +16,64 @@ const screenWidth = Dimensions.get("screen").width;
 
 const Pokemon = ({ name, url, navigation }) => {
   const [pokemonDetails, setPokemonDetailsLocal] = useState(null);
+  const [PokemonDetailsLocalSpecies, setPokemonDetailsLocalSpecies] = useState(
+    null
+  );
+  const [pokemonDetailsLoading, setPokemonDetailsLoading] = useState(false);
+
   const dispatch = useDispatch();
 
   const handlePokemonDetails = () => {
     axios
       .get(url)
-      .then((response) => setPokemonDetailsLocal(response.data))
-      .catch((e) => console.log("error leo"));
+      .then((response) => {
+        setPokemonDetailsLocal(response.data);
+        console.log("esse aqui léo:", response);
+      })
+      .then(() => {
+        setPokemonDetailsLoading(true);
+      })
+      .catch((e) => console.log(e));
+  };
+
+  const handlePokemonDetailsSpecies = () => {
+    axios
+      .get(pokemonDetails.species.url)
+      .then((response) => {
+        setPokemonDetailsLocalSpecies(response.data);
+        console.log("RESP SPECIES", response.data);
+      })
+      .catch((e) => console.log(e));
   };
 
   useEffect(() => {
     handlePokemonDetails();
-  }, [url]);
+  }, []);
 
-  return pokemonDetails != null ? (
+  useEffect(() => {
+    if (pokemonDetailsLoading) {
+      handlePokemonDetailsSpecies();
+    }
+  }, [pokemonDetailsLoading]);
+
+  return pokemonDetails && PokemonDetailsLocalSpecies ? (
     <TouchableOpacity
       onPress={() => {
         dispatch(setPokemonDetails({ pokemonUrl: url }));
         navigation.navigate("detailsScreen");
       }}
-      style={styles.pokemonContainer}
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-around",
+        width: screenWidth * 0.96,
+        height: 94,
+        backgroundColor: PokemonDetailsLocalSpecies.color.name,
+        borderRadius: 10,
+        margin: 5,
+        borderLeftWidth: 4,
+        borderColor: "#fff",
+      }}
     >
       <Text style={styles.pokemonName}>{name}</Text>
       <Image
@@ -53,27 +90,6 @@ const Pokemon = ({ name, url, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  pokemonContainer: {
-    flexDirection: "row",
-    borderWidth: 4,
-    borderColor: "#700",
-    alignItems: "center",
-    justifyContent: "space-around",
-    width: screenWidth * 0.96,
-    height: 94,
-    backgroundColor: "#f00",
-    borderRadius: 10,
-    margin: 5,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-
-    elevation: 4,
-  },
   pokemonName: {
     fontSize: 32,
     fontFamily: "BebasNeue_400Regular",
